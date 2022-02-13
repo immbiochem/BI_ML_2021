@@ -28,7 +28,6 @@ class KNNClassifier:
         predictions, np array of ints (num_samples) - predicted class
            for each sample
         """
-        print("Something")
         if n_loops == 0:
             distances = self.compute_distances_no_loops(X)
         elif n_loops == 1:
@@ -106,11 +105,6 @@ class KNNClassifier:
         pred, np array of bool (num_test_samples) - binary predictions 
            for every test sample
         """
-
-#         n_train = distances.shape[1]
-#         n_test = distances.shape[0]
-#         prediction = np.zeros(n_test)
-    
         numeric_y_train = np.array(list(map(int, self.train_y)))
         k_nearest_neighbors = distances.argsort()[:, [i for i in range(self.k)]]
         predict = np.array(list(map(int, numeric_y_train[k_nearest_neighbors].mean(1) > 0.5)))
@@ -128,12 +122,9 @@ class KNNClassifier:
         pred, np array of int (num_test_samples) - predicted class index 
            for every test sample
         """
-
-        n_train = distances.shape[0]
-        n_test = distances.shape[0]
-        prediction = np.zeros(n_test, np.int)
-
-        """
-        YOUR CODE IS HERE
-        """
-        pass
+        y_train_num = np.array(list(map(int, self.train_y)))
+        num_test_samples = distances.shape[0]
+        pred = np.zeros(num_test_samples)
+        for i in range(num_test_samples):
+            pred[i] = np.argmax(np.bincount(y_train_num[distances.argsort()[:, [i for i in range(self.k)]]][i]))
+        return pred
